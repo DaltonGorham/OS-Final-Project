@@ -1,21 +1,77 @@
 #include "PageReplacement.h"
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 
 
 PageReplacement::PageReplacement(std::string filename) {
     parseInputFile(filename);
 }
 
-void PageReplacement::firstInFirstOut() {
-    // need to write this here...
+
+int PageReplacement::runAlgorithm() {
+    if (m_algorithm == "FIFO") return runFIFO();
+    else if (m_algorithm == "OPTIMAL") return runOptimal();
+    else std::cout << "Unknown Algorithm" << std::endl; return -1;
 }
 
-void PageReplacement::optimal() {
-    // need to make this....
+int PageReplacement::runFIFO() {
+    // add code here
+    return 0;
 }
 
-void PageReplacement::displayOutput() {
+int PageReplacement::runOptimal() {
+    int numOfPageFaults = 0;
+    int frames[m_numberOfFrames];
+    int count = 0;
+    std::string referenceString = m_referenceString;
+    
+    for (int i = 0; i < referenceString.length(); i++) {
+        int current = referenceString[i] - '0';
+        
+        bool found = false;
+        for (int j = 0; j < count; j++) {
+            if (frames[j] == current) {
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            continue;
+        }
+
+        numOfPageFaults++;
+
+        if (count < m_numberOfFrames) {
+            frames[count] = current;
+            count++;
+        } else {
+            int farthest = i;
+            int replace = 0;
+
+            for (int k = 0; k < count; k++) {
+                int nextUse = referenceString.length();
+
+                for (int m = i + 1; m < referenceString.length(); m++) {
+                    if ((referenceString[m] - '0') == frames[k]) {
+                        nextUse = m;
+                        break;
+                    }
+                }
+
+                if (nextUse > farthest) {
+                    farthest = nextUse;
+                    replace = k;
+                }
+            }
+            frames[replace] = current;
+        }
+    }
+    return numOfPageFaults;
+}
+
+void PageReplacement::displayOutput(std::unordered_map<int, FrameState>){
     // placeholder for now
     // will eventually need to look similar to this output
     /*

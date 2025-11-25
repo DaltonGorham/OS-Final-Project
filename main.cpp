@@ -5,10 +5,9 @@ int main() {
     PageReplacement firstInFirstOut("FIFO.txt");
     PageReplacement optimal("OPT.txt");
 
-    firstInFirstOut.displayOutput();
-    firstInFirstOut.printValues();
-
-    optimal.displayOutput();
-    optimal.printValues();
-
+    int numberOfPageFaults = optimal.runAlgorithm();
+    std::cout << numberOfPageFaults << std::endl;
+    
+    numberOfPageFaults = firstInFirstOut.runAlgorithm();
+    std::cout << numberOfPageFaults << std::endl;
 }
