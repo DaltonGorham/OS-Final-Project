@@ -16,11 +16,11 @@ private:
     std::string m_referenceString;
     int m_numberOfFrames;
     void parseInputFile(std::string filename);
-    int runFIFO();
-    int runOptimal();
+    void runFIFO();
+    void runOptimal();
 public:
     PageReplacement(std::string filename);
-    int runAlgorithm();
+    void runAlgorithm();
     void displayOutput(std::unordered_map<int, FrameState>);
     void printValues();
     std::string inline getAlgorithm() { return m_algorithm; }

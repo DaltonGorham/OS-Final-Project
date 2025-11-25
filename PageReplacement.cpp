@@ -9,22 +9,21 @@ PageReplacement::PageReplacement(std::string filename) {
 }
 
 
-int PageReplacement::runAlgorithm() {
+void PageReplacement::runAlgorithm() {
     if (m_algorithm == "FIFO") return runFIFO();
     else if (m_algorithm == "OPTIMAL") return runOptimal();
-    else std::cout << "Unknown Algorithm" << std::endl; return -1;
+    else std::cout << "Unknown Algorithm" << std::endl;
 }
 
-int PageReplacement::runFIFO() {
+void PageReplacement::runFIFO() {
     // add code here
-    return 0;
 }
 
-int PageReplacement::runOptimal() {
+void PageReplacement::runOptimal() {
     int numOfPageFaults = 0;
+    std::string referenceString = m_referenceString;
     int frames[m_numberOfFrames]; // array of our frames currently in memory
     int count = 0; // the number of frames currently in memory
-    std::string referenceString = m_referenceString;
     std::unordered_map<int, FrameState> frameHistroy; // map to store metadata for displaying
     
     // outermost loop that iterates through the reference string
@@ -86,8 +85,9 @@ int PageReplacement::runOptimal() {
         }
         frameHistroy[i] = state; // store in map like this key: index, value: {count:3, frames[1,4,3]}
     }
+    // display results
     displayOutput(frameHistroy);
-    return numOfPageFaults;
+    std::cout << "Number of Page Faults: " << numOfPageFaults << std::endl;
 }
 
 void PageReplacement::displayOutput(std::unordered_map<int, FrameState> frameHistory){
