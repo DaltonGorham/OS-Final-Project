@@ -1,4 +1,5 @@
 #include "PageReplacement.h"
+#include "InputValidator.h"
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
@@ -89,7 +90,7 @@ void PageReplacement::runOptimal() {
 }
 
 void PageReplacement::displayOutput(std::unordered_map<int, FrameState> frameHistory){
-    std::cout << "Running Page Replacement Algorithm with the following:\n\n";
+    std::cout << "Running Page Replacement Algorithm for the following:\n\n";
     printValues();
     std::cout << std::endl;
 
@@ -124,26 +125,36 @@ void PageReplacement::parseInputFile(std::string filename) {
     std::ifstream file(filename);
     std::string line;
     
-    if (file.is_open()) {
-        std::getline(file, line);
-
-          // we already know this is the format she has in the files
-          m_algorithm = line[0];
-          if (m_algorithm == "F") m_algorithm = "FIFO";
-          if (m_algorithm == "O") m_algorithm = "OPTIMAL";
-          m_numberOfFrames = line[2] - '0'; // quick hack to make it an int and not a ascii char
-
-          for (int i = 3; i < line.length(); i++) {
-                if (line[i] != ',') {
-                    m_referenceString += line[i];
-                }
-          }
-          
-        file.close();
-    } else {
+    // Check if file opened successfully
+    if (!file.is_open()) {
         std::cerr << "Error: Could not open file: " << filename << std::endl;
+        std::cerr << "Please ensure the file exists and is readable." << std::endl;
         exit(EXIT_FAILURE);
     }
+    
+    // Read the line
+    std::getline(file, line);
+    
+    // Validate the file format
+    if (!InputValidator::validateFile(filename, line)) {
+        file.close();
+        exit(EXIT_FAILURE);
+    }
+
+    // now thats its in a format we can handle, parse it and set member vars
+    m_algorithm = line[0];
+    if (m_algorithm == "F") m_algorithm = "FIFO";
+    if (m_algorithm == "O") m_algorithm = "OPTIMAL";
+    m_numberOfFrames = line[2] - '0';
+
+    // create our reference string
+    for (int i = 3; i < line.length(); i++) {
+        if (line[i] != ',') {
+            m_referenceString += line[i];
+        }
+    }
+    
+    file.close();
 }
 
 void PageReplacement::printValues() {
