@@ -3,11 +3,9 @@
 #include <fstream>
 #include <unordered_map>
 
-
 PageReplacement::PageReplacement(std::string filename) {
     parseInputFile(filename);
 }
-
 
 void PageReplacement::runAlgorithm() {
     if (m_algorithm == "FIFO") return runFIFO();
@@ -142,6 +140,9 @@ void PageReplacement::parseInputFile(std::string filename) {
           }
           
         file.close();
+    } else {
+        std::cerr << "Error: Could not open file: " << filename << std::endl;
+        exit(EXIT_FAILURE);
     }
 }
 
