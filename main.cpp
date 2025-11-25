@@ -6,8 +6,6 @@ int main() {
     PageReplacement optimal("OPT.txt");
 
     int numberOfPageFaults = optimal.runAlgorithm();
-    std::cout << numberOfPageFaults << std::endl;
+    std::cout << "Number of Page Faults: " << numberOfPageFaults << std::endl;
     
-    numberOfPageFaults = firstInFirstOut.runAlgorithm();
-    std::cout << numberOfPageFaults << std::endl;
 }
