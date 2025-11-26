@@ -15,8 +15,62 @@ void PageReplacement::runAlgorithm() {
 }
 
 void PageReplacement::runFIFO() {
-    // add code here
+    int numOfPageFaults = 0;
+    std::string referenceString = m_referenceString;
+    int frames[m_numberOfFrames]; // array of our frames currently in memory
+    int count = 0; // the number of frames currently in memory
+    std::unordered_map<int, FrameState> frameHistroy; // map to store metadata for displaying
+    int k = 0; // pointer to track which frame to replace next
+    
+    // outermost loop that iterates through the reference string
+    for (int i = 0; i < referenceString.length(); i++) {
+        int current = referenceString[i] - '0'; // convert ascii to int
+        
+        // if its already in memory, we skip
+        bool found = false;
+        for (int j = 0; j < count; j++) {
+            if (frames[j] == current) {
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            continue;
+        }
+
+        // its not already in memory so we add to our page faults
+        numOfPageFaults++;
+
+        // if we havent reached our frame limit yet, just add to memory
+        if (count < m_numberOfFrames) {
+            frames[count] = current;
+            count++;
+        // otherwise, we need to replace the oldest one (FIFO)
+        } 
+        else {
+            // Replace the oldest frame
+            frames[k] = current;
+            // Move the pointer to the next frame
+            k += 1;
+            // Wrap around if we reach the end
+            if (k >= m_numberOfFrames) {
+                k = 0;
+            }
+        }
+        FrameState state; // create a FrameState instance
+        state.count = count; // save how many frames are currently filled
+        for (int inMemory = 0; inMemory < count; inMemory++) { 
+            state.frames[inMemory] = frames[inMemory]; // copy each page number to the state
+        }
+        frameHistroy[i] = state; // store in map like this key: index, value: {count:3, frames[1,4,3]}
+    }
+
+    // display results
+    displayOutput(frameHistroy);
+    std::cout << "Number of Page Faults: " << numOfPageFaults << std::endl;
 }
+
 
 void PageReplacement::runOptimal() {
     int numOfPageFaults = 0;
