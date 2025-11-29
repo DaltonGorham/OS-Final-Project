@@ -138,6 +138,7 @@ void PageReplacement::runOptimal() {
         }
         frameHistroy[i] = state; // store in map like this key: index, value: {count:3, frames[1,4,3]}
     }
+    
     // display results
     displayOutput(frameHistroy);
     std::cout << "Number of Page Faults: " << numOfPageFaults << std::endl;
